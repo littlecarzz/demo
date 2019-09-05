@@ -1,6 +1,7 @@
 package com.example.demo.common.web;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * 描述：
@@ -11,4 +12,12 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class IndexController {
 
+    @RequestMapping("/index")
+    public String index() {
+        return "index";
+    }
+    @RequestMapping("/login")
+    public String login() {
+        return "login";
+    }
 }

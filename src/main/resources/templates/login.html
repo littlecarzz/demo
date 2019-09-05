@@ -19,11 +19,11 @@
 		<div class="login_face"><img th:src="@{/images/face.jpg}" src="../static/images/face.jpg" class="userAvatar"></div>
 		<div class="layui-form-item input-item">
 			<label for="userName">用户名</label>
-			<input type="text" placeholder="请输入用户名" autocomplete="off" id="userName" class="layui-input" lay-verify="required">
+			<input type="text" placeholder="请输入用户名" autocomplete="off" id="username" name="username" class="layui-input" lay-verify="required" autofocus="autofocus">
 		</div>
 		<div class="layui-form-item input-item">
 			<label for="password">密码</label>
-			<input type="password" placeholder="请输入密码" autocomplete="off" id="password" class="layui-input" lay-verify="required">
+			<input type="password" placeholder="请输入密码" autocomplete="off" id="password" name="password" class="layui-input" lay-verify="required">
 		</div>
 		<div class="layui-form-item input-item" id="imgCode">
 			<label for="code">验证码</label>
@@ -41,6 +41,6 @@
 	</form>
 	<script type="text/javascript" th:src="@{/layui/layui.js}" src="../static/layui/layui.js"></script>
 	<script type="text/javascript" th:src="@{/js/login.js}" src="../static/js/login.js"></script>
-	<script type="text/javascript" th:src="@{/js/cache.js}" src="../static/js/cache.js"></script>
+<!--	<script type="text/javascript" th:src="@{/js/cache.js}" src="../static/js/cache.js"></script>-->
 </body>
 </html>
