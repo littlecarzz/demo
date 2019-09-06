@@ -9,5 +9,5 @@ import com.example.demo.account.entity.SysUser;
  * @date 2019/9/5 10:32
  */
 public interface UserService {
-    SysUser findByName(String name);
+    SysUser findByUsername(String username);
 }

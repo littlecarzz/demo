@@ -28,20 +28,13 @@ public class SysRole implements Serializable {
      */
     @Column(length = 50, nullable = false)
     private String name;
-    /**
+/*    *//**
      * 用户对应的角色
-     */
+     *//*
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",
             joinColumns ={@JoinColumn(name = "role_id",nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "user_id",nullable = false)})
-    private SysUser sysUser;
+    private SysUser sysUser;*/
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_role",
-            joinColumns ={@JoinColumn(name = "role_id",nullable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "user_id",nullable = false)})
-    public SysUser getSysUser() {
-        return sysUser;
-    }
 }

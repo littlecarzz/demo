@@ -80,11 +80,4 @@ public class SysUser implements Serializable {
         this.sysRoles = sysRoles;
     }
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
-            joinColumns ={@JoinColumn(name = "user_id",nullable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "role_id",nullable = false)})
-    public Set<SysRole> getSysRoles() {
-        return sysRoles;
-    }
 }

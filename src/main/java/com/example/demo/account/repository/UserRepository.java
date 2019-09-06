@@ -13,9 +13,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<SysUser,Long> {
     /**
-     * 根据name查找SysUser
-     * @param name
+     * 根据username查找SysUser
+     * @param username
      * @return SysUser
      */
-    SysUser findByName(String name);
+    SysUser findByUsername(String username);
 }

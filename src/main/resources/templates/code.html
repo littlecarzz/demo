@@ -1,0 +1,65 @@
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>SpringBoot 生成验证码</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type='text/javascript'>
+
+        $(function () {
+            $("#validateCode").keyup(function(){
+                checkLoginValidateCode($(this).val());
+            });
+
+        });
+
+        function uploadLoginValidateCode() {
+            $("#loginValidateCode").attr("src","/loginValidateCode?random="+new Date().getMilliseconds());
+        }
+
+
+        function checkLoginValidateCode(validateCode) {
+            var error = $("#validateCode").parent().next();
+            if(validateCode != null && validateCode != ""){
+                $.ajax({
+                    type: "POST",
+                    async:false,
+                    url: "/checkLoginValidateCode?validateCode="+validateCode,
+                    success : function(json) {
+                        if(json != null && json.code == 200 && json.status != null) {
+                            if (json.status == true) {
+                                error.html("恭喜你验证码，正确！！！！！");
+                            } else if(json.status == false){
+                                error.html("验证码错误，请重新输入");
+                            }else{
+                                error.html("验证码过期，请重新输入");
+                                uploadLoginValidateCode();
+                            }
+                        }
+                        return false;
+                    },
+                    error:function(XMLHttpRequest,textStatus,errorThrown){
+                        alert("服务器错误！状态码："+XMLHttpRequest.status);
+                        // 状态
+                        console.log(XMLHttpRequest.readyState);
+                        // 错误信息
+                        console.log(textStatus);
+                        return false;
+                    }
+                });
+            }else{
+                error.html("请输入验证码！");
+            }
+        }
+
+    </script>
+</head>
+<body>
+验证码： <img id="loginValidateCode" height="40" width="150"  style="cursor: pointer;" src="/loginValidateCode" onclick="uploadLoginValidateCode();">
+
+<p>
+    你输入的内容：<input type="text" id="validateCode" name="validateCode" />
+</p>
+<p style="color: red"></p>
+
+</body>
+</html>
