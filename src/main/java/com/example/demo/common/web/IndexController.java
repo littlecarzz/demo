@@ -26,24 +26,12 @@ public class IndexController {
     public String index() {
         return "index";
     }
+
     @GetMapping("/login")
     public String login() {
         return "login";
     }
-    @RequestMapping("/login-error")
-    public String loginError(HttpServletRequest request) {
-        AuthenticationException exp = (AuthenticationException) request.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-        if (exp instanceof BadCredentialsException) {
-            request.setAttribute("error_msg", "用户名或密码错误");
-        }else if (exp instanceof AccountExpiredException) {
-            request.setAttribute("error_msg", "用户已过期");
-        } else if (exp instanceof LockedException) {
-            request.setAttribute("error_msg", "用户已被锁定");
-        } else {
-            request.setAttribute("error_msg", "其他错误");
-        }
-        return "login";
-    }
+
     @RequestMapping("/403")
     public String error() {
         return "/error/403";

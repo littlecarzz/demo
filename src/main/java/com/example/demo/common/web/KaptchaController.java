@@ -1,6 +1,7 @@
 package com.example.demo.common.web;
 
 import com.example.demo.common.utils.CommonUtil;
+import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 
 /**
- * 描述：
+ * 描述：验证码Controller
  *
  * @author littlecar
  * @date 2019/9/6 16:34
@@ -31,7 +32,7 @@ public class KaptchaController {
     /**
      * 登录验证码SessionKey
      */
-    public static final String LOGIN_VALIDATE_CODE = "login_validate_code";
+    public static final String LOGIN_VALIDATE_CODE = Constants.KAPTCHA_SESSION_KEY;
     /**
      * 登录验证码图片
      */

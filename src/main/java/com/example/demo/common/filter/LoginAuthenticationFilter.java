@@ -21,7 +21,6 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         AntPathRequestMatcher requestMatcher = new AntPathRequestMatcher("/login", "POST");
         this.setRequiresAuthenticationRequestMatcher(requestMatcher);
         this.setAuthenticationManager(getAuthenticationManager());
-//        this.setAuthenticationFailureHandler(new LoginAuthenticationFailureHandler());
     }
 
     @Override
@@ -30,7 +29,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         String captcha = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
 
         if (!captcha.contentEquals(verification)) {
-//            throw new CaptchaException("captcha code not matched!");
+            throw new CaptchaException("captcha code not matched!");
         }
         return super.attemptAuthentication(request, response);
     }
