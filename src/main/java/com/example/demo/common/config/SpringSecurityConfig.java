@@ -1,6 +1,5 @@
 package com.example.demo.common.config;
 
-import com.example.demo.common.error.MyAccessDeniedHandler;
 import com.example.demo.common.exception.CaptchaException;
 import com.example.demo.common.filter.LoginAuthenticationFilter;
 import com.example.demo.common.service.CustomerDetailService;
@@ -10,13 +9,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.authentication.*;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -24,6 +23,7 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +43,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private MyAccessDeniedHandler myAccessDeniedHandler;
     @Autowired
     private CustomerDetailService customerDetailService;
-
+    @Autowired
+    private DataSource dataSource;
+    @Autowired
+    private FilterSecurityInterceptor mySecurityFilter;
 
     @Bean
     public LoginSuccessHandler loginSuccessHandler(){
@@ -55,6 +58,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+/*    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }*/
+
+        /**
+         * 自定义登录验证
+         * @return
+         */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
@@ -81,11 +93,23 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
+     * 验证码校验过滤器
+     * @return
+     * @throws Exception
+     */
+    public LoginAuthenticationFilter loginAuthenticationFilter() throws Exception {
+        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter();
+        loginAuthenticationFilter.setAuthenticationManager(authenticationManager());
+        loginAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
+        return loginAuthenticationFilter;
+    }
+
+    /**
      * 数据源
      * @return
      */
-    @Bean(name = "mydatasource")
-    public DataSource dataSource() {
+//    @Bean
+    public DriverManagerDataSource driverManagerDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/demo");
@@ -101,22 +125,20 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
      * @return
      */
     @Bean
-    public PersistentTokenRepository persistentTokenRepository() {
+    public PersistentTokenRepository persistentTokenRepository() throws SQLException {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-        tokenRepository.setDataSource(dataSource()); // 设置数据源
+        tokenRepository.setDataSource(driverManagerDataSource()); // 设置数据源
 //        tokenRepository.setCreateTableOnStartup(true); // 启动创建表，创建成功后注释掉
+        System.out.println(tokenRepository.getJdbcTemplate().getDataSource().getConnection().getSchema());
         return tokenRepository;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter();
-        loginAuthenticationFilter.setAuthenticationManager(authenticationManager());
-        loginAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
         http
-                .addFilterBefore(loginAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(loginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(mySecurityFilter, FilterSecurityInterceptor.class)
                 .authorizeRequests()
-                    .antMatchers("/css/**","/js/**","/json/**","/layui/**","/images/**").permitAll()
                     .antMatchers("/login","/code","/loginValidateCode").permitAll()
                     .anyRequest().authenticated()
                 .and()
@@ -142,17 +164,18 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe()
                     .userDetailsService(customerDetailService)
                     .tokenRepository(persistentTokenRepository())
-                    .tokenValiditySeconds(60*60*24*7)
+                    .tokenValiditySeconds(60*60)
                 .and()
-                .csrf().disable()
+                .csrf()
+                    .disable()
                 ;
     }
 
-/*    @Override
+    @Override
     public void configure(WebSecurity web) throws Exception {
         //解决静态资源被拦截的问题
-        web.ignoring().antMatchers("/**");
-    }*/
+        web.ignoring().antMatchers("/css/**","/js/**","/json/**","/layui/**","/images/**");
+    }
 
     /**
      *create two users admin and user

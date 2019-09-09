@@ -23,7 +23,7 @@ public class SysResourceRole implements Serializable {
 	 * 角色ID
 	 */
 	@Column(name = "roleId", length = 50)
-	private String roleId;
+	private Long roleId;
 	/**
 	 * 资源ID
 	 */

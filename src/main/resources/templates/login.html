@@ -9,7 +9,7 @@
 	<link rel="stylesheet" th:href="@{/css/public.css}" href="../static/css/public.css" media="all" />
 </head>
 <body class="loginBody">
-	<form class="layui-form" th:action="@{/login}" method="POST">
+	<form class="layui-form" th:action="@{/login}" method="POST" style="height: 360px">
 		<div class="login_face"><img th:src="@{/images/face.jpg}" src="../static/images/face.jpg" class="userAvatar"></div>
 			<div class="layui-form-item input-item" th:align="center">
 				<span th:if="${param.error}">用户名或密码错误！</span>
@@ -29,9 +29,9 @@
 			<input type="text" placeholder="请输入验证码" autocomplete="off" id="code" name="code" class="layui-input" lay-verify="required" required>
 			<img id="loginCode"  th:src="@{/loginValidateCode}" style="height: 37px;width: 100px;">
 		</div>
-		<div class="layui-form-item input-item">
+		<div style="margin-bottom: 10px">
+			<input type="checkbox" lay-skin="primary" name="remember-me" id="remember-me" value="true">
 			<label for="remember-me">一周不登录</label>
-			<input type="checkbox" name="remember-me" id="remember-me" value="true" lay-skin="primary">
 		</div>
 		<div class="layui-form-item">
 			<button type="submit" class="layui-btn layui-block" lay-filter="login" >登录</button>
