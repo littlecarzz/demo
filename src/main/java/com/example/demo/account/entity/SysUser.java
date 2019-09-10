@@ -17,7 +17,7 @@ import java.util.Set;
  * @date 2019/9/5 9:55
  */
 @Entity
-@Table(name = "sys_user")
+@Table(name = "user")
 @Data
 public class SysUser implements Serializable {
 

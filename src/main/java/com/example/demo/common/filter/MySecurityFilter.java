@@ -8,13 +8,11 @@ import org.springframework.security.access.intercept.AbstractSecurityInterceptor
 import org.springframework.security.access.intercept.InterceptorStatusToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.FilterInvocation;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.*;
 import java.io.IOException;
-import java.util.logging.LogRecord;
 
 /**
  * 描述：
@@ -26,7 +24,7 @@ import java.util.logging.LogRecord;
  * @date 2019/9/9 16:45
  */
 @Component
-public class MySecurityFilter extends FilterSecurityInterceptor implements Filter {
+public class MySecurityFilter extends AbstractSecurityInterceptor implements Filter {
     @Autowired
     private CustomInvocationSecurityMetadataSourceService mySecurityMetadataSource;
 
@@ -64,7 +62,6 @@ public class MySecurityFilter extends FilterSecurityInterceptor implements Filte
         invoke(fi);
     }
 
-    @Override
     public void invoke(FilterInvocation fi) throws IOException, ServletException {
         System.out.println("filter..........................");
         InterceptorStatusToken token = super.beforeInvocation(fi);

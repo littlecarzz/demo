@@ -11,8 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 描述：
- *
+ * 描述：自定义登录验证 extends UsernamePasswordAuthenticationFiltersss
  * @author littlecar
  * @date 2019/9/6 17:27
  */

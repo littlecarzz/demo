@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface ResourceRoleService {
     List<SysResourceRole> findAll();
-    List<SysRole> findRolesByResourceId(String resourceId);
+    List<SysRole> findRolesByResourceId(Long resourceId);
 }

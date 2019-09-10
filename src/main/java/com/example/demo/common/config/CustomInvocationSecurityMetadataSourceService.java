@@ -5,6 +5,7 @@ import com.example.demo.account.entity.SysRole;
 import com.example.demo.account.service.impl.ResourceRoleServiceImpl;
 import com.example.demo.account.service.impl.ResourceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -17,8 +18,7 @@ import javax.annotation.PostConstruct;
 import java.util.*;
 
 /**
- * 描述：
- *
+ * 描述：系统启动时将资源和权限的对应信息关联起来
  * @author littlecar
  * @date 2019/9/9 15:20
  */
@@ -44,8 +44,8 @@ public class CustomInvocationSecurityMetadataSourceService implements FilterInvo
         List<SysResource> resources = resourceService.findAll();
         for (SysResource resource :
                 resources) {
-            List<SysRole> roles = resourceRoleService.findRolesByResourceId(resource.getResourceId());
-            String url = resource.getResourceString();
+            List<SysRole> roles = resourceRoleService.findRolesByResourceId(resource.getId());
+            String url = resource.getUrl();
             Collection<ConfigAttribute> atts = new ArrayList<ConfigAttribute>();
             for (SysRole role :
                     roles) {

@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @date 2019/9/5 10:10
  */
 @Entity
-@Table(name="sys_resource")
+@Table(name="resource")
 @Data
 public class SysResource implements Serializable {
 
@@ -22,32 +22,13 @@ public class SysResource implements Serializable {
 	/**
 	 * url
 	 */
-	@Column(name = "resourceString", length = 1000)
-	private String resourceString;
-	/**
-	 * 资源ID
-	 */
-	@Column(name = "resourceId", length = 50)
-	private String resourceId;
-	/**
-	 * 备注
-	 */
-	@Column(name = "remark", length = 200)
-	private String remark;
+	@Column(name = "url", length = 100)
+	private String url;
 	/**
 	 * 资源名称
 	 */
-	@Column(name = "resourceName", length = 400)
-	private String resourceName;
-	/**
-	 * 资源所对应的方法名
-	 */
-	@Column(name = "methodName", length = 400)
-	private String methodName;
-	/**
-	 * 资源所对应的包路径
-	 */
-	@Column(name = "methodPath", length = 1000)
-	private String methodPath;
+	@Column(name = "name", length = 100)
+	private String name;
+
 
 }

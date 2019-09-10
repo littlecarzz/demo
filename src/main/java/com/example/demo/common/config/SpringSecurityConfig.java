@@ -2,11 +2,13 @@ package com.example.demo.common.config;
 
 import com.example.demo.common.exception.CaptchaException;
 import com.example.demo.common.filter.LoginAuthenticationFilter;
+import com.example.demo.common.filter.MySecurityFilter;
 import com.example.demo.common.service.CustomerDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
 import org.springframework.security.authentication.*;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,22 +16,29 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 描述：
- *
+ * 描述：spring security 配置
  * @author littlecar
  * @date 2019/9/4 11:13
  */
@@ -46,27 +55,22 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
     @Autowired
-    private FilterSecurityInterceptor mySecurityFilter;
-
-    @Bean
-    public LoginSuccessHandler loginSuccessHandler(){
-        return new LoginSuccessHandler();
-    }
+    private MySecurityFilter mySecurityFilter;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-/*    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }*/
+    @Bean
+    public LoginSuccessHandler loginSuccessHandler() {
+        return new LoginSuccessHandler();
+    }
 
-        /**
-         * 自定义登录验证
-         * @return
-         */
+    /**
+     * 自定义登录验证
+     * @return
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
@@ -93,43 +97,47 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * 验证码校验过滤器
+     * 自定义RememberMeServices
      * @return
+     * @throws SQLException
+     */
+    @Bean
+    public PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices() throws SQLException {
+        PersistentTokenBasedRememberMeServices rememberMeServices = new PersistentTokenBasedRememberMeServices("remember-me", customerDetailService, persistentTokenRepository());
+        rememberMeServices.setTokenValiditySeconds(60*60*24*7);
+        return rememberMeServices;
+    }
+
+    /**
+     * 自定义登录验证 extends UsernamePasswordAuthenticationFilter
+     * @return LoginAuthenticationFilter
      * @throws Exception
      */
     public LoginAuthenticationFilter loginAuthenticationFilter() throws Exception {
         LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter();
         loginAuthenticationFilter.setAuthenticationManager(authenticationManager());
+        //登录失败
         loginAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
+        //登录成功后可使用loginSuccessHandler()存储查询用户信息，主页跳转等，可选。
+        loginAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessHandler());
+        //RememberMeServices
+        loginAuthenticationFilter.setRememberMeServices(persistentTokenBasedRememberMeServices());
         return loginAuthenticationFilter;
-    }
-
-    /**
-     * 数据源
-     * @return
-     */
-//    @Bean
-    public DriverManagerDataSource driverManagerDataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/demo");
-        dataSource.setUsername("root");
-        dataSource.setPassword("123456");
-        return dataSource;
     }
 
     /**
      * 持久化token
      * Security中，默认是使用PersistentTokenRepository的子类InMemoryTokenRepositoryImpl，将token放在内存中
      * 如果使用JdbcTokenRepositoryImpl，会创建表persistent_logins，将token持久化到数据库
-     * @return
+     * @return PersistentTokenRepository
      */
     @Bean
     public PersistentTokenRepository persistentTokenRepository() throws SQLException {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-        tokenRepository.setDataSource(driverManagerDataSource()); // 设置数据源
-//        tokenRepository.setCreateTableOnStartup(true); // 启动创建表，创建成功后注释掉
-        System.out.println(tokenRepository.getJdbcTemplate().getDataSource().getConnection().getSchema());
+        // 设置数据源
+        tokenRepository.setDataSource(dataSource);
+        // 启动创建表，创建成功后注释掉
+//        tokenRepository.setCreateTableOnStartup(true);
         return tokenRepository;
     }
 
@@ -138,16 +146,21 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .addFilterBefore(loginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(mySecurityFilter, FilterSecurityInterceptor.class)
+                //无权限403的处理
+                .exceptionHandling().accessDeniedHandler(myAccessDeniedHandler)
+                .and()
                 .authorizeRequests()
-                    .antMatchers("/login","/code","/loginValidateCode").permitAll()
+                    .antMatchers("/login","/code","/loginValidateCode","/test").permitAll()
                     .anyRequest().authenticated()
                 .and()
                 .formLogin()
                     .loginPage("/login")
                     .loginProcessingUrl("/login")
-                    .successForwardUrl("/index")
-                    //登录成功后可使用loginSuccessHandler()存储用户信息，可选。
-//                  .successHandler(loginSuccessHandler())
+//                    successFordwardUrl只支持post请求，如果你得首页是get请求，你可以使用successHandler 然后做个重定向
+//                    successForwardUrl需要配合自定义的AuthenticationSuccessHandler使用，
+//                    defaultSuccessUrl相当于有一个AuthenticationSuccessHandler默认的实现类SavedRequestAwareAuthenticationSuccessHandler
+//                    .defaultSuccessUrl("/test",true)
+//                    .successForwardUrl("/test")
                 .and()
                 .logout()
                     .logoutUrl("/logout")
@@ -158,22 +171,23 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     .invalidateHttpSession(true)
                     .permitAll()
                 .and()
-                //无权限403的处理
-                .exceptionHandling().accessDeniedHandler(myAccessDeniedHandler)
-                .and()
                 .rememberMe()
-                    .userDetailsService(customerDetailService)
-                    .tokenRepository(persistentTokenRepository())
-                    .tokenValiditySeconds(60*60)
+//                    .userDetailsService(customerDetailService)
+//                    .tokenRepository(persistentTokenRepository())
+//                    .tokenValiditySeconds(60*2)
                 .and()
                 .csrf()
                     .disable()
                 ;
     }
 
+    /**
+     * 解决静态资源被拦截的问题
+     * @param web
+     * @throws Exception
+     */
     @Override
     public void configure(WebSecurity web) throws Exception {
-        //解决静态资源被拦截的问题
         web.ignoring().antMatchers("/css/**","/js/**","/json/**","/layui/**","/images/**");
     }
 

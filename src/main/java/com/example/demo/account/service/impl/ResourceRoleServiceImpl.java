@@ -10,10 +10,7 @@ import com.example.demo.account.service.ResourceRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 描述：
@@ -35,17 +32,18 @@ public class ResourceRoleServiceImpl  implements ResourceRoleService {
     }
 
     @Override
-    public List<SysRole> findRolesByResourceId(String resourceId) {
+    public List<SysRole> findRolesByResourceId(Long resourceId) {
         List<SysResourceRole> resourceRoleList=resourceRoleRepository.findByResourceId(resourceId);
         if(resourceRoleList==null || resourceRoleList.size()==0){
             return null;
         }
-        List<SysRole> roleList = new LinkedList<>();
+        List<SysRole> roleList = new ArrayList<>();
         for (SysResourceRole resourceRole :
                 resourceRoleList) {
             Optional<SysRole> role = roleRepository.findById(resourceRole.getRoleId());
             roleList.add(role.get());
         }
+        System.out.println(roleList.toString());
         return roleList;
     }
 }

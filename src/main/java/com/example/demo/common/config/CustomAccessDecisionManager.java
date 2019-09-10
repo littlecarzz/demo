@@ -56,7 +56,8 @@ public class CustomAccessDecisionManager implements AccessDecisionManager{
         Iterator<ConfigAttribute> ite = configAttributes.iterator();
         while( ite.hasNext()){
             ConfigAttribute ca = ite.next();
-            String needRole = "ROLE_"+((SecurityConfig)ca).getAttribute();
+//            String needRole = "ROLE_"+((SecurityConfig)ca).getAttribute();
+            String needRole = ((SecurityConfig)ca).getAttribute();
             //ga 为用户所被赋予的权限。 needRole 为访问相应的资源应该具有的权限。
             for( GrantedAuthority ga: authentication.getAuthorities()){
                 if(needRole.trim().equals(ga.getAuthority().trim())){

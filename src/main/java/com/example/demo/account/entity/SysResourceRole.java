@@ -12,7 +12,7 @@ import java.util.Date;
  * @date 2019/9/5 10:10
  */
 @Entity
-@Table(name="sys_resource_role")
+@Table(name="role_resource")
 @Data
 public class SysResourceRole implements Serializable {
 	@Id
@@ -28,11 +28,6 @@ public class SysResourceRole implements Serializable {
 	 * 资源ID
 	 */
 	@Column(name = "resourceId", length = 50)
-	private String resourceId;
-	/**
-	 * 更新时间
-	 */
-	@Column(name = "updateTime")
-	private Date updateTime;
+	private Long resourceId;
 
 }

@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @date 2019/9/5 10:10
  */
 @Entity
-@Table(name = "sys_role")
+@Table(name = "role")
 @Data
 public class SysRole implements Serializable {
 
@@ -28,13 +28,12 @@ public class SysRole implements Serializable {
      */
     @Column(length = 50, nullable = false)
     private String name;
-/*    *//**
-     * 用户对应的角色
-     *//*
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_role",
+
+
+/*    @ManyToOne(fetch = FetchType.LAZY)
+     *//*    @JoinTable(name = "user_role",
             joinColumns ={@JoinColumn(name = "role_id",nullable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "user_id",nullable = false)})
+            inverseJoinColumns = {@JoinColumn(name = "user_id",nullable = false)})*//*
     private SysUser sysUser;*/
 
 }

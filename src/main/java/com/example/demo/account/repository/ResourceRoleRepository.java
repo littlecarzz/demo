@@ -14,5 +14,5 @@ import java.util.List;
  */
 @Repository
 public interface ResourceRoleRepository extends JpaRepository<SysResourceRole,Long> {
-    List<SysResourceRole> findByResourceId(String resourceId);
+    List<SysResourceRole> findByResourceId(Long resourceId);
 }
