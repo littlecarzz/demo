@@ -42,15 +42,9 @@ public class SysUser implements Serializable {
     private String password;
 
     /**
-     * 姓名
-     */
-    @Column(name = "name",length = 20,nullable = true)
-    private String name;
-
-    /**
      * 联系电话
      */
-    @Column(length = 50,nullable = true)
+    @Column(length = 50,nullable = false)
     private String mobile;
 
     /**
@@ -58,6 +52,12 @@ public class SysUser implements Serializable {
      */
     @Column(length = 5,nullable = false)
     private String sex;
+
+    /**
+     * 邮箱
+     */
+    @Column(length = 100,nullable = false)
+    private String email;
 
     /**
      * 用户的角色集合
@@ -68,16 +68,22 @@ public class SysUser implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "role_id",nullable = false)})
     private Set<SysRole> sysRoles = new HashSet<SysRole>();
 
+    /**
+     * 状态：1启用，0禁用
+     */
+    @Column(length = 2,nullable = false)
+    private Integer status;
+
     public SysUser() {
     }
 
-    public SysUser(String username, String password, String name, String mobile, String sex, Set<SysRole> sysRoles) {
+    public SysUser(String username, String password, String mobile, String sex, Set<SysRole> sysRoles,Integer status) {
         this.username = username;
         this.password = password;
-        this.name = name;
         this.mobile = mobile;
         this.sex = sex;
         this.sysRoles = sysRoles;
+        this.status = status;
     }
 
 }

@@ -1,6 +1,9 @@
 package com.example.demo.common.config;
 
+import com.example.demo.account.entity.Dljl;
 import com.example.demo.account.entity.SysUser;
+import com.example.demo.account.service.impl.DljlServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -10,13 +13,19 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 登录成功后的处理
  * 可实现主页跳转；
  * 用户查询，存储等
+ * @author littlecar
  */
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
+
+    @Autowired
+    private DljlServiceImpl dljlService;
 	@Override  
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response, Authentication authentication) throws IOException,
@@ -24,8 +33,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         //获得授权后可得到用户信息
         SysUser userDetails = (SysUser)authentication.getPrincipal();
         //输出登录提示信息
-        System.out.println("欢迎 " + userDetails.getName() + " 登录");
+        System.out.println("欢迎 " + userDetails.getUsername() + " 登录");
         System.out.println("IP :"+getIpAddress(request));
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //保存登录记录
+        Dljl dljl = new Dljl(userDetails.getUsername(),df.format(new Date()),getIpAddress(request));
+        dljlService.save(dljl);
         response.sendRedirect(request.getContextPath()+"/index");
 
     }  

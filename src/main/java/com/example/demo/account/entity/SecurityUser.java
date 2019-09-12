@@ -21,11 +21,11 @@ public class SecurityUser extends SysUser implements UserDetails {
         if (null != sysUser) {
             this.setId(sysUser.getId());
             this.setUsername(sysUser.getUsername());
-            this.setName(sysUser.getName());
             this.setPassword(sysUser.getPassword());
             this.setSysRoles(sysUser.getSysRoles());
             this.setMobile(sysUser.getMobile());
             this.setSex(sysUser.getSex());
+            this.setStatus(sysUser.getStatus());
         }
     }
 

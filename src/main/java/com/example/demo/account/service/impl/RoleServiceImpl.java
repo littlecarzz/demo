@@ -7,6 +7,7 @@ import com.example.demo.account.service.RoleService;
 import com.example.demo.account.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 描述：
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
  * @date 2019/9/5 10:32
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleRepository roleRepository;

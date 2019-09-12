@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -32,13 +33,13 @@ public class IndexController {
 
     @RequestMapping("/index")
     public String index() {
-        SecurityUser userDetail = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+/*        SecurityUser userDetail = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Set<SysRole> sysRoles = userDetail.getSysRoles();
         List<SysResource> resourceList = new LinkedList<>();
         for (SysRole role:
              sysRoles) {
 
-        }
+        }*/
         return "index";
     }
 
@@ -70,7 +71,8 @@ public class IndexController {
     }
 
     @RequestMapping("/main")
-    public String main() {
+    public String main(HttpServletResponse response) {
+        response.addHeader("x-frame-options","SAMEORIGIN");
         return "main";
     }
 }

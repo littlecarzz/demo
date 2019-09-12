@@ -2,6 +2,8 @@ package com.example.demo.account.service;
 
 import com.example.demo.account.entity.SysUser;
 
+import java.util.List;
+
 /**
  * 描述：
  *
@@ -10,4 +12,6 @@ import com.example.demo.account.entity.SysUser;
  */
 public interface UserService {
     SysUser findByUsername(String username);
+
+    List<SysUser> findAll();
 }

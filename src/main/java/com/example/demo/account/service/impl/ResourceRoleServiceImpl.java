@@ -9,6 +9,7 @@ import com.example.demo.account.repository.RoleRepository;
 import com.example.demo.account.service.ResourceRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -19,6 +20,7 @@ import java.util.*;
  * @date 2019/9/9 15:30
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class ResourceRoleServiceImpl  implements ResourceRoleService {
     @Autowired
     private ResourceRoleRepository resourceRoleRepository;

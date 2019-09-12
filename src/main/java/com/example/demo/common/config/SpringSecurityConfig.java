@@ -176,6 +176,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //                    .tokenRepository(persistentTokenRepository())
 //                    .tokenValiditySeconds(60*2)
                 .and()
+                .headers()
+//                  X-Frame-Options HTTP 响应头
+                    .frameOptions().sameOrigin()
+                .and()
                 .csrf()
                     .disable()
                 ;

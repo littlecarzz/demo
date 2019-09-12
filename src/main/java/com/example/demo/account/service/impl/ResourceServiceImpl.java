@@ -5,6 +5,7 @@ import com.example.demo.account.repository.ResourceRepository;
 import com.example.demo.account.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @date 2019/9/9 15:30
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class ResourceServiceImpl implements ResourceService {
     @Autowired
     private ResourceRepository resourceRepository;
