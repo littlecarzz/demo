@@ -26,7 +26,8 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String verification = request.getParameter("code");
         String captcha = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
-
+        verification = verification.toLowerCase();
+        captcha = captcha.toLowerCase();
         if (!captcha.contentEquals(verification)) {
             throw new CaptchaException("captcha code not matched!");
         }

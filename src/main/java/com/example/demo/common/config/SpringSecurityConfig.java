@@ -57,11 +57,19 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private MySecurityFilter mySecurityFilter;
 
+    /**
+     * 密码加密
+     * @return
+     */
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * 登录成功后的处理
+     * @return
+     */
     @Bean
     public LoginSuccessHandler loginSuccessHandler() {
         return new LoginSuccessHandler();
@@ -109,7 +117,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * 自定义登录验证 extends UsernamePasswordAuthenticationFilter
+     * 自定义登录过滤器 extends UsernamePasswordAuthenticationFilter
      * @return LoginAuthenticationFilter
      * @throws Exception
      */

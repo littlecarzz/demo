@@ -33,7 +33,7 @@ public class KaptchaConfig {
         //文本实现类
         properties.setProperty("kaptcha.textproducer.impl", "com.google.code.kaptcha.text.impl.DefaultTextCreator");
         //文本集合，验证码值从此集合中获取
-        properties.setProperty("kaptcha.textproducer.char.string", "01234567890");
+        properties.setProperty("kaptcha.textproducer.char.string", "01234567890QWERTYUIOPASDFGHJKLZXCVBNM");
         //验证码长度
         properties.setProperty("kaptcha.textproducer.char.length", "4");
         //字体
