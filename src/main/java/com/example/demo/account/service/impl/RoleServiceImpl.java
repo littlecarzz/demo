@@ -1,5 +1,6 @@
 package com.example.demo.account.service.impl;
 
+import com.example.demo.account.entity.SysRole;
 import com.example.demo.account.entity.SysUser;
 import com.example.demo.account.repository.RoleRepository;
 import com.example.demo.account.repository.UserRepository;
@@ -21,4 +22,8 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Override
+    public SysRole findByName(String name) {
+        return roleRepository.findByName(name);
+    }
 }

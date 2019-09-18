@@ -11,7 +11,9 @@ layui.use(['bodyTab','form','element','layer','jquery'],function(){
     	layer = parent.layer === undefined ? layui.layer : top.layer;
 		tab = layui.bodyTab({
 			openTabNum : "50",  //最大可打开窗口数量
-			url : "json/navs.json" //获取菜单json地址
+			// url : "json/navs.json" //获取菜单json地址
+			url : "json/navs1.json" //获取菜单json地址
+			// url : "/getRes" //获取菜单json地址
 		});
 
 	//通过顶部菜单获取左侧二三级菜单   注：此处只做演示之用，实际开发中通过接口传参的方式获取导航数据
@@ -22,7 +24,7 @@ layui.use(['bodyTab','form','element','layer','jquery'],function(){
 				//重新渲染左侧菜单
 				tab.render();
 			}else if(json == "memberCenter"){
-				dataStr = data.memberCenter;
+				dataStr = data.memberCenter;userInfo
 				//重新渲染左侧菜单
 				tab.render();
 			}else if(json == "systemeSttings"){
@@ -36,17 +38,26 @@ layui.use(['bodyTab','form','element','layer','jquery'],function(){
             }
 		})
 	}
+	function getData1(){
+		$.getJSON(tab.tabConfig.url,function(data) {
+			dataStr = data.contentManagement;
+			//重新渲染左侧菜单
+			tab.render();
+		})
+	}
 	//页面加载时判断左侧菜单是否显示
 	//通过顶部菜单获取左侧菜单
 	$(".topLevelMenus li,.mobileTopLevelMenus dd").click(function(){
 		if($(this).parents(".mobileTopLevelMenus").length != "0"){
+
 			$(".topLevelMenus li").eq($(this).index()).addClass("layui-this").siblings().removeClass("layui-this");
 		}else{
 			$(".mobileTopLevelMenus dd").eq($(this).index()).addClass("layui-this").siblings().removeClass("layui-this");
 		}
 		$(".layui-layout-admin").removeClass("showMenu");
 		$("body").addClass("site-mobile");
-		getData($(this).data("menu"));
+		// getData($(this).data("menu"));
+		getData1();
 		//渲染顶部窗口
 		tab.tabMove();
 	})
@@ -164,4 +175,31 @@ function showImg(){
             anim: 5
         });
     });
+}
+function changeRole(){
+	//Ajax获取
+	$.post('/getRoles', {
+
+		}, function(str){
+		layer.open({
+			type: 1
+			,title: "切换角色"
+			,closeBtn: false
+			,area: '400px;'
+			,shade: 0.8
+			,id: 'changeRole' //设定一个id，防止重复弹出
+			,btn: ['取消']
+			,btnAlign: 'c'
+			,move: false //是否允许拖拽
+			,resize: false //是否允许拉伸
+			,content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">你知道吗？亲！<br>layer ≠ layui<br><br>layer只是作为Layui的一个弹层模块，由于其用户基数较大，所以常常会有人以为layui是layerui<br><br>layer虽然已被 Layui 收编为内置的弹层模块，但仍然会作为一个独立组件全力维护、升级。<br><br>我们此后的征途是星辰大海 ^_^</div>'
+/*			,success: function(layero){
+				var btn = layero.find('.layui-layer-btn');
+				btn.find('.layui-layer-btn0').attr({
+					href: 'http://www.layui.com/'
+					,target: '_blank'
+				});
+			}*/
+		});
+	});
 }

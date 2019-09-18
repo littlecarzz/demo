@@ -36,7 +36,7 @@
 						</dl>
 					</li>
 				</ul>
-				<ul class="layui-nav topLevelMenus" pc>
+<!--				<ul class="layui-nav topLevelMenus" pc>
 					<li class="layui-nav-item layui-this" data-menu="contentManagement">
 						<a href="javascript:;"><i class="layui-icon" data-icon="&#xe63c;">&#xe63c;</i><cite>内容管理</cite></a>
 					</li>
@@ -49,7 +49,7 @@
 					<li class="layui-nav-item" data-menu="seraphApi" pc>
 						<a href="javascript:;"><i class="layui-icon" data-icon="&#xe705;">&#xe705;</i><cite>使用文档</cite></a>
 					</li>
-				</ul>
+				</ul>-->
 			    <!-- 顶部右侧菜单 -->
 			    <ul class="layui-nav top_menu">
 					<li class="layui-nav-item" pc>
@@ -61,11 +61,12 @@
 					<li class="layui-nav-item" id="userInfo" sec:authorize="isAuthenticated()">
 						<a href="javascript:;"><img th:src="@{/images/face.jpg}" class="layui-nav-img userAvatar" width="35" height="35"><cite class="adminName" sec:authentication="name"></cite></a>
 						<dl class="layui-nav-child">
-							<dd><a href="javascript:;" data-url="page/user/userInfo.html"><i class="seraph icon-ziliao" data-icon="icon-ziliao"></i><cite>个人资料</cite></a></dd>
-							<dd><a href="javascript:;" data-url="page/user/changePwd.html"><i class="seraph icon-xiugai" data-icon="icon-xiugai"></i><cite>修改密码</cite></a></dd>
-							<dd><a href="javascript:;" class="showNotice"><i class="layui-icon">&#xe645;</i><cite>系统公告</cite><span class="layui-badge-dot"></span></a></dd>
-							<dd pc><a href="javascript:;" class="functionSetting"><i class="layui-icon">&#xe620;</i><cite>功能设定</cite><span class="layui-badge-dot"></span></a></dd>
-							<dd pc><a href="javascript:;" class="changeSkin"><i class="layui-icon">&#xe61b;</i><cite>更换皮肤</cite></a></dd>
+							<dd><a href="javascript:void(0);" th:href="@{/userInfo}" ><i class="seraph icon-ziliao" data-icon="icon-ziliao"></i><cite>个人资料</cite></a></dd>
+							<dd><a href="javascript:void(0);" th:href="@{/changePwd}" ><i class="seraph icon-xiugai" data-icon="icon-xiugai"></i><cite>修改密码</cite></a></dd>
+							<dd><a href="javascript:void(0);" onclick="changeRole()" ><i class="seraph icon-xiugai" data-icon="icon-xiugai"></i><cite>切换角色</cite></a></dd>
+							<dd><a href="javascript:void(0);" class="showNotice"><i class="layui-icon">&#xe645;</i><cite>系统公告</cite><span class="layui-badge-dot"></span></a></dd>
+							<dd pc><a href="javascript:void(0);" class="functionSetting"><i class="layui-icon">&#xe620;</i><cite>功能设定</cite><span class="layui-badge-dot"></span></a></dd>
+							<dd pc><a href="javascript:void(0);" class="changeSkin"><i class="layui-icon">&#xe61b;</i><cite>更换皮肤</cite></a></dd>
 							<dd><a th:href="@{/logout}" class="signOut"><i class="seraph icon-tuichu"></i><cite>退出</cite></a></dd>
 						</dl>
 					</li>
@@ -120,7 +121,7 @@
 		</div>
 		<!-- 底部 -->
 		<div class="layui-footer footer">
-			<p><span>copyright @2018 </span>　</p>
+			<p><span>copyright @2018 </span></p>
 		</div>
 	</div>
 

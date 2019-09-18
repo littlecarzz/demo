@@ -4,6 +4,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 描述：资源表
@@ -29,6 +31,30 @@ public class SysResource implements Serializable {
 	 */
 	@Column(name = "name", length = 100)
 	private String name;
-
+	/**
+	 * 父资源，若为根目录，则为null
+	 */
+//	@Column(name = "name", length = 100)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="parent")
+	private SysResource parent;
+	/**
+	 * 子资源
+	 */
+	@OneToMany(mappedBy="parent",fetch = FetchType.LAZY)
+	@OrderBy(value="num ASC")
+	private List<SysResource> subResources = new ArrayList<SysResource>();
+	/**
+	 * 排序
+	 */
+	private Integer num;
+	/**
+	 * 图标
+	 */
+	private String icon;
+	/**
+	 * 是否能传播
+	 */
+	private Boolean spread;
 
 }

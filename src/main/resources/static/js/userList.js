@@ -23,25 +23,28 @@ layui.use(['form','layer','table','laytpl'],function(){
                     return '<a class="layui-blue" href="mailto:'+d.email+'">'+d.email+'</a>';
                 }},
             /*{field: 'email', title: '邮箱', Width:80, align:"center"},*/
-            {field: 'mobil', title: '手机号码', Width:80, align:"center"},
+            {field: 'mobile', title: '手机号码', Width:80, align:"center"},
             {field: 'roles', title: '角色', minWidth:50, align:'center'},
             {field: 'status', title: '状态', width:70, align:'center',templet:function(d){
                     return d.status == 0 ? "禁用" : "启用";
                 }},
-            {field: 'lastTime', title: '最后登录时间', align:'center',minWidth:100},
-            {title: '操作', minWidth:175, templet:'#userListBar',fixed:"right",align:"center"}
+            {field: 'lastTime', title: '最后登录时间', align:'center',minWidth:100,templet:function (d) {
+                    return (d.lastTime==null) ?"无":d.lastTime;
+                }},
+            {title: '操作', minWidth:175,fixed:"right",align:"center",templet:"#userListBar"}
         ]]
     });
 
     //搜索【此功能需要后台配合，所以暂时没有动态效果演示】
     $(".search_btn").on("click",function(){
         if($(".searchVal").val() != ''){
-            table.reload("newsListTable",{
+            table.reload("userListTable",{
+                url:"/userList",
                 page: {
                     curr: 1 //重新从第 1 页开始
                 },
                 where: {
-                    key: $(".searchVal").val()  //搜索的关键字
+                    username: $(".searchVal").val()  //搜索的关键字
                 }
             })
         }else{
@@ -58,11 +61,26 @@ layui.use(['form','layer','table','laytpl'],function(){
             success : function(layero, index){
                 var body = layui.layer.getChildFrame('body', index);
                 if(edit){
-                    body.find(".username").val(edit.userName);  //登录名
-                    body.find(".sex input[value="+edit.sex+"]").prop("checked","checked");  //性别
+                    console.log(edit.sex);
+                    console.log(edit.status);
+                    console.log(edit.roles);
+                    body.find(".username").val(edit.username);  //登录名
+                    console.log(body.find(".sex input[value='" + edit.sex + "']"));
+                    console.log(body.find(".status"));
+                    body.find(".userSex input[value="+edit.sex+"]").prop("checked","checked");  //性别
+                    // body.find(".sex input[value!='" + edit.sex + "']").prop("checked", false);
+                    body.find(".userStatus").val(edit.status);
                     body.find(".email").val(edit.email);  //邮箱
-                    body.find(".mobil").val(edit.mobil);  //手机
-                    body.find(".status").val(edit.status);    //用户状态
+                    body.find(".mobile").val(edit.mobile);  //手机
+/*                    var role=edit.roles.split("/");
+                    for (var i = 0; i < role.length; i++) {
+                        if (role[i] == "管理员") {
+                            $("#role input[value='ADMIN']").prop("checked","checked");
+                        }
+                        if (role[i] == "普通用户") {
+                            $("#role input[value='USER']").prop("checked","checked");
+                        }
+                    }*/
                     form.render();
                 }
                 setTimeout(function(){
@@ -87,18 +105,26 @@ layui.use(['form','layer','table','laytpl'],function(){
     $(".delAll_btn").click(function(){
         var checkStatus = table.checkStatus('userListTable'),
             data = checkStatus.data,
-            newsId = [];
+            usernames = "";
         if(data.length > 0) {
             for (var i in data) {
-                newsId.push(data[i].newsId);
+                if(i==data.length-1){
+                    usernames+=data[i].username;
+                }else{
+                    usernames+=data[i].username+",";
+                }
             }
             layer.confirm('确定删除选中的用户？', {icon: 3, title: '提示信息'}, function (index) {
-                // $.get("删除文章接口",{
-                //     newsId : newsId  //将需要删除的newsId作为参数传入
-                // },function(data){
-                tableIns.reload();
-                layer.close(index);
-                // })
+                $.get("/userDel",{
+                    username : usernames //将需要删除的newsId作为参数传入
+                },function(data){
+                    if (data =="success") {
+                        tableIns.reload();
+                        layer.close(index);
+                    }else if (data == "error") {
+                        layer.msg("用户删除失败！");
+                    }
+                })
             })
         }else{
             layer.msg("请选择需要删除的用户");
@@ -113,6 +139,13 @@ layui.use(['form','layer','table','laytpl'],function(){
         if(layEvent === 'edit'){ //编辑
             addUser(data);
         }else if(layEvent === 'usable'){ //启用禁用
+            if (data.status==1) {
+                usableText = "是否确定禁用此用户？",
+                    btnText = "已禁用";
+            }else{
+                usableText = "是否确定启用此用户？",
+                    btnText = "已启用";
+            }
             var _this = $(this),
                 usableText = "是否确定禁用此用户？",
                 btnText = "已禁用";
@@ -134,12 +167,17 @@ layui.use(['form','layer','table','laytpl'],function(){
             });
         }else if(layEvent === 'del'){ //删除
             layer.confirm('确定删除此用户？',{icon:3, title:'提示信息'},function(index){
-                // $.get("删除文章接口",{
-                //     newsId : data.newsId  //将需要删除的newsId作为参数传入
-                // },function(data){
-                    tableIns.reload();
-                    layer.close(index);
-                // })
+                $.get("/userDel",{
+                    username : data.username //参数传入
+                },function(data){
+                    if (data =="success") {
+                        tableIns.reload();
+                        layer.close(index);
+                    }else if (data == "error") {
+                        layer.msg("用户删除失败！");
+                    }
+
+                })
             });
         }
     });

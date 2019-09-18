@@ -30,4 +30,25 @@ public class UserServiceImpl implements UserService {
     public List<SysUser> findAll() {
         return userRepository.findAll();
     }
+
+    @Override
+    public void save(SysUser user) {
+        userRepository.save(user);
+    }
+
+    @Override
+    public void delete(SysUser user) {
+        userRepository.delete(user);
+    }
+
+    @Override
+    public List<SysUser> findByUsernameLike(String username) {
+        return userRepository.findByUsernameLike(username);
+    }
+
+    @Override
+    public Long findUserRoleIdByRoleId(Long id, Long roleId) {
+        return userRepository.findUserRoleIdByRoleId(id, roleId);
+    }
+
 }

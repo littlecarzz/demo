@@ -14,4 +14,12 @@ public interface UserService {
     SysUser findByUsername(String username);
 
     List<SysUser> findAll();
+
+    void save(SysUser user);
+
+    void delete(SysUser user);
+
+    List<SysUser> findByUsernameLike(String username);
+
+    Long findUserRoleIdByRoleId(Long id, Long roleId);
 }

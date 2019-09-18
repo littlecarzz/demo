@@ -14,16 +14,16 @@ public class UserInfo {
     private String username;
     private String sex;
     private String email;
-    private String mobil;
+    private String mobile;
     private String roles;
     private Integer status;
     private String lastTime;
 
-    public UserInfo(String username, String sex, String email, String mobil, String roles, Integer status, String lastTime) {
+    public UserInfo(String username, String sex, String email, String mobile, String roles, Integer status, String lastTime) {
         this.username = username;
         this.sex = sex;
         this.email = email;
-        this.mobil = mobil;
+        this.mobile = mobile;
         this.roles = roles;
         this.status = status;
         this.lastTime = lastTime;

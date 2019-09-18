@@ -17,6 +17,10 @@ public class SecurityUser extends SysUser implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
+    private Integer isTop;
+
+    private Long currUserRoleId;
+
     public SecurityUser(SysUser sysUser) {
         if (null != sysUser) {
             this.setId(sysUser.getId());
@@ -41,6 +45,22 @@ public class SecurityUser extends SysUser implements UserDetails {
             }
         }
         return authorities;
+    }
+
+    public Long getCurrUserRoleId() {
+        return currUserRoleId;
+    }
+
+    public void setCurrUserRoleId(Long currUserRoleId) {
+        this.currUserRoleId = currUserRoleId;
+    }
+
+    public Integer getIsTop() {
+        return isTop;
+    }
+
+    public void setIsTop(Integer isTop) {
+        this.isTop = isTop;
     }
 
     @Override

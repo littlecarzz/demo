@@ -1,5 +1,6 @@
 package com.example.demo.account.service;
 
+import com.example.demo.account.entity.SysRole;
 import com.example.demo.account.entity.SysUser;
 
 /**
@@ -9,4 +10,5 @@ import com.example.demo.account.entity.SysUser;
  * @date 2019/9/5 10:32
  */
 public interface RoleService {
+    SysRole findByName(String name);
 }

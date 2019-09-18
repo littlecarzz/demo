@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html class="loginHtml" lang="zh"
+	  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<title>选择角色</title>
+	<link rel="stylesheet" th:href="@{/layui/css/layui.css}" href="../static/layui/css/layui.css" media="all" />
+	<link rel="stylesheet" th:href="@{/css/public.css}" href="../static/css/public.css" media="all" />
+</head>
+<body class="loginBody">
+	<form class="layui-form" style="height: 360px">
+		<div class="layui-form-item" style="text-align: center">
+			<p style="font-size: large">选择角色</p>
+		</div>
+		<div class="layui-form-item" th:each="role,iterStat:${roleList}" style="text-align: center">
+			<a class="layui-btn layui-block" th:method="post" th:href="@{/chooseRole/{roleId}(roleId=${role.id})}" th:text="${role.name eq 'ADMIN' ? '管理员':role.name eq 'USER' ? '普通用户':'其他'}" ></a>
+		</div>
+		<div class="layui-form-item" >
+			<a class="layui-btn layui-block" th:href="@{/logout}" th:text="取消" ></a>
+		</div>
+	</form>
+	<script type="text/javascript" th:src="@{/layui/layui.js}" src="../static/layui/layui.js"></script>
+</body>
+</html>
