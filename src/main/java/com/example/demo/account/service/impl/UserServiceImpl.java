@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
         Optional<SysRole> role = roleRepository.findById(roleId);
         Collection<GrantedAuthority> authorities = new LinkedHashSet<>();
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.get().getName());
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(currentUserDetails.getUsername()+"@@@"+roleId, currentUserDetails.getUserPwd(), authorities);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(currentUserDetails.getUsername()+"@@@"+roleId.toString(), currentUserDetails.getUserPwd(), authorities);
         try{
             token.setDetails(new WebAuthenticationDetails(request));
             DaoAuthenticationProvider authenticator = new DaoAuthenticationProvider();

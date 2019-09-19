@@ -33,6 +33,7 @@ public class CustomerDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         boolean issub = false;
         Long roleId = null;
+        System.out.println(username);
         if (username.contains("@@@")) {
             issub=true;
             username = username.split("@@@")[0];
