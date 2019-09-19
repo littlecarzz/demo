@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ import java.util.List;
 @Entity
 @Table(name="resource")
 @Data
-public class SysResource implements Serializable {
+public class SysResource implements Serializable, Comparator<SysResource> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +30,8 @@ public class SysResource implements Serializable {
 	/**
 	 * 资源名称
 	 */
-	@Column(name = "name", length = 100)
-	private String name;
+	@Column(name = "title", length = 100)
+	private String title;
 	/**
 	 * 父资源，若为根目录，则为null
 	 */
@@ -52,9 +53,22 @@ public class SysResource implements Serializable {
 	 * 图标
 	 */
 	private String icon;
-	/**
-	 * 是否能传播
-	 */
-	private Boolean spread;
 
+	@Override
+	public int compare(SysResource o1, SysResource o2) {
+		return o1.getNum()-o2.getNum();
+	}
+
+	@Override
+	public String toString() {
+		return "SysResource{" +
+				"id=" + id +
+				", url='" + url + '\'' +
+				", title='" + title + '\'' +
+				", parent=" + parent +
+				", subResources.size=" + subResources.size() +
+				", num=" + num +
+				", icon='" + icon + '\'' +
+				'}';
+	}
 }

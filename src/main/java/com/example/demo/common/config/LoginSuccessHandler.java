@@ -48,7 +48,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         if (isTop==0){
             response.sendRedirect(request.getContextPath()+"/index");
         } else if (isTop == 1) {
-            response.sendRedirect(request.getContextPath()+"/toChooseRole");
+            request.getRequestDispatcher("/toChooseRole").forward(request,response);
+//            response.sendRedirect(request.getContextPath()+"/toChooseRole");
         } else {
 
         }

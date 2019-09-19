@@ -1,7 +1,9 @@
 package com.example.demo.account.repository;
 
+import com.example.demo.account.entity.SysResource;
 import com.example.demo.account.entity.SysResourceRole;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,4 +17,5 @@ import java.util.List;
 @Repository
 public interface ResourceRoleRepository extends JpaRepository<SysResourceRole,Long> {
     List<SysResourceRole> findByResourceId(Long resourceId);
+
 }

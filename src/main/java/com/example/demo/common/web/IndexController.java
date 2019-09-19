@@ -1,9 +1,13 @@
 package com.example.demo.common.web;
 
+import com.example.demo.account.entity.ResourceInfo;
 import com.example.demo.account.entity.SecurityUser;
 import com.example.demo.account.entity.SysResource;
 import com.example.demo.account.entity.SysRole;
+import com.example.demo.account.service.ResourceRoleService;
 import com.example.demo.account.service.UserService;
+import com.example.demo.account.service.impl.ResourceRoleServiceImpl;
+import com.example.demo.account.service.impl.ResourceServiceImpl;
 import com.example.demo.account.service.impl.RoleServiceImpl;
 import com.example.demo.account.service.impl.UserServiceImpl;
 import com.example.demo.common.utils.SpringSecurityUtils;
@@ -11,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -36,27 +41,28 @@ public class IndexController {
 
     @Autowired
     private UserServiceImpl userService;
+    @Autowired
+    private ResourceServiceImpl resourceService;
 
     @RequestMapping("/index")
     public String index() {
-
         return "index";
     }
     @RequestMapping("/toChooseRole")
-    public String toChooseRole(ModelMap map) {
+    public String toChooseRole(ModelMap map,HttpServletRequest request) {
+        String password = request.getParameter("password");
         SecurityUser currentUserDetails = SpringSecurityUtils.getCurrentUserDetails();
-//        userService.findUserRolesById(currentUserDetails.getId());
+        currentUserDetails.setUserPwd(password);
         Set<SysRole> sysRoles = currentUserDetails.getSysRoles();
         map.addAttribute("roleList", sysRoles);
         return "chooseRole";
     }
-    @PostMapping("/chooseRole/{roleId}")
-    public String toChooseRole(@PathVariable("roleId") Long roleId) {
+    @GetMapping("/chooseRole/{roleId}")
+    public String toChooseRole(@PathVariable("roleId") Long roleId,HttpServletRequest request) {
         SecurityUser currentUserDetails = SpringSecurityUtils.getCurrentUserDetails();
-        Long id = userService.findUserRoleIdByRoleId(currentUserDetails.getId(), roleId);
-        Set<SysRole> sysRoles = currentUserDetails.getSysRoles();
-        map.addAttribute("roleList", sysRoles);
-        return "chooseRole";
+        currentUserDetails.setCurrUserRoleId(roleId);
+        userService.doRoleChoose(roleId,request,currentUserDetails);
+        return "redirect:/index";
     }
 
     @GetMapping("/login")
@@ -92,8 +98,15 @@ public class IndexController {
         return "main";
     }
 
-//    @RequestMapping("/getRes")
-//    public String getRes() {
-//
-//    }
+    @RequestMapping("/getRes")
+    @ResponseBody
+    public Map<String, List<ResourceInfo>> getRes() {
+        Map<String, List<ResourceInfo>> map = new HashMap<>();
+        Long userRoleId = SpringSecurityUtils.getCurrentUserRoleId();
+        System.out.println("/getRes--"+userRoleId);
+        List<SysResource> resourceList=resourceService.findResourceByRoleId(userRoleId);
+        List<ResourceInfo> resourceInfos = resourceService.combineJson(resourceList);
+        map.put("contentManagement",resourceInfos);
+        return map;
+    }
 }

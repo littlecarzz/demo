@@ -11,4 +11,6 @@ import com.example.demo.account.entity.SysUser;
  */
 public interface RoleService {
     SysRole findByName(String name);
+
+    SysRole findById(Long roleId);
 }

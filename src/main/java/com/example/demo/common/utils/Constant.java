@@ -19,5 +19,10 @@ public class Constant {
         roleMap.put("ADMIN", "管理员");
         roleMap.put("USER", "普通用户");
     }
+    public static final Map<Long, String> roleIdMap = new HashMap<>();
+    static{
+        roleIdMap.put(1L, "ADMIN");
+        roleIdMap.put(2L, "USER");
+    }
 
 }

@@ -24,6 +24,4 @@ public interface UserRepository extends JpaRepository<SysUser,Long> {
 
     List<SysUser> findByUsernameLike(String username);
 
-    @Query(nativeQuery = true, value = "select d.id from user_role d where d.user_id=?1 and d.role_id=?2")
-    Long findUserRoleIdByRoleId(Long id, Long roleId);
 }

@@ -16,10 +16,18 @@ import java.util.Set;
 public class SecurityUser extends SysUser implements UserDetails {
 
     private static final long serialVersionUID = 1L;
-
+    /**
+     * 用户角色：0单角色，1多角色，-1没有角色
+     */
     private Integer isTop;
-
+    /**
+     * 当前用户角色Id
+     */
     private Long currUserRoleId;
+    /**
+     * 用户明密码
+     */
+    private String userPwd;
 
     public SecurityUser(SysUser sysUser) {
         if (null != sysUser) {
@@ -35,6 +43,7 @@ public class SecurityUser extends SysUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        System.out.println("SecurityUser_getAuthorities");
         Collection<GrantedAuthority> authorities = new LinkedHashSet<>();
         Set<SysRole> sysRoles = this.getSysRoles();
         if (null != sysRoles) {
@@ -61,6 +70,14 @@ public class SecurityUser extends SysUser implements UserDetails {
 
     public void setIsTop(Integer isTop) {
         this.isTop = isTop;
+    }
+
+    public String getUserPwd() {
+        return userPwd;
+    }
+
+    public void setUserPwd(String userPwd) {
+        this.userPwd = userPwd;
     }
 
     @Override

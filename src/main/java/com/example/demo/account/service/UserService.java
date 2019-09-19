@@ -1,7 +1,9 @@
 package com.example.demo.account.service;
 
+import com.example.demo.account.entity.SecurityUser;
 import com.example.demo.account.entity.SysUser;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -21,5 +23,5 @@ public interface UserService {
 
     List<SysUser> findByUsernameLike(String username);
 
-    Long findUserRoleIdByRoleId(Long id, Long roleId);
+    void doRoleChoose(Long roleId, HttpServletRequest request, SecurityUser currentUserDetails);
 }

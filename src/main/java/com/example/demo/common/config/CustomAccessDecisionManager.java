@@ -1,5 +1,7 @@
 package com.example.demo.common.config;
 
+import com.example.demo.common.utils.Constant;
+import com.example.demo.common.utils.SpringSecurityUtils;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -57,8 +59,12 @@ public class CustomAccessDecisionManager implements AccessDecisionManager{
         while( ite.hasNext()){
             ConfigAttribute ca = ite.next();
 //            String needRole = "ROLE_"+((SecurityConfig)ca).getAttribute();
-            String needRole = ((SecurityConfig)ca).getAttribute();
             //ga 为用户所被赋予的权限。 needRole 为访问相应的资源应该具有的权限。
+            String needRole = ((SecurityConfig)ca).getAttribute();
+//            Long currentUserRoleId = SpringSecurityUtils.getCurrentUserRoleId();
+//            String currRole = Constant.roleIdMap.get(currentUserRoleId);
+            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+            System.out.println("CustomAccessDecisionManager :"+authorities.toString());
             for( GrantedAuthority ga: authentication.getAuthorities()){
                 if(needRole.trim().equals(ga.getAuthority().trim())){
                     return;

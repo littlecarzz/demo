@@ -13,7 +13,7 @@
 			<p style="font-size: large">选择角色</p>
 		</div>
 		<div class="layui-form-item" th:each="role,iterStat:${roleList}" style="text-align: center">
-			<a class="layui-btn layui-block" th:method="post" th:href="@{/chooseRole/{roleId}(roleId=${role.id})}" th:text="${role.name eq 'ADMIN' ? '管理员':role.name eq 'USER' ? '普通用户':'其他'}" ></a>
+			<a class="layui-btn layui-block" th:href="@{/chooseRole/{roleId}(roleId=${role.id})}" th:text="${role.name eq 'ADMIN' ? '管理员':role.name eq 'USER' ? '普通用户':'其他'}" ></a>
 		</div>
 		<div class="layui-form-item" >
 			<a class="layui-btn layui-block" th:href="@{/logout}" th:text="取消" ></a>

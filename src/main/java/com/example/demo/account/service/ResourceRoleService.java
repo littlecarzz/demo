@@ -1,5 +1,6 @@
 package com.example.demo.account.service;
 
+import com.example.demo.account.entity.SysResource;
 import com.example.demo.account.entity.SysResourceRole;
 import com.example.demo.account.entity.SysRole;
 
@@ -14,4 +15,6 @@ import java.util.List;
 public interface ResourceRoleService {
     List<SysResourceRole> findAll();
     List<SysRole> findRolesByResourceId(Long resourceId);
+
+
 }

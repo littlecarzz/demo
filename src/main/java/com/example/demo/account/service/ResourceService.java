@@ -1,5 +1,6 @@
 package com.example.demo.account.service;
 
+import com.example.demo.account.entity.ResourceInfo;
 import com.example.demo.account.entity.SysResource;
 
 import java.util.List;
@@ -12,4 +13,7 @@ import java.util.List;
  */
 public interface ResourceService {
     List<SysResource> findAll();
+    List<SysResource> findResourceByRoleId(Long userRoleId);
+
+    List<ResourceInfo> combineJson(List<SysResource> resourceList);
 }

@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * @date 2019/9/18 15:38
  */
 public class SpringSecurityUtils {
-    private static Authentication getAuthentication() {
+    public  static Authentication getAuthentication() {
         SecurityContext context = SecurityContextHolder.getContext();
 
         if (context == null) {
@@ -46,7 +46,7 @@ public class SpringSecurityUtils {
                 .getPrincipal();
         return userDetails;
     }
-    public static Long getCurrentUserAuthId() {
+    public static Long getCurrentUserRoleId() {
         SecurityUser userDetails = getCurrentUserDetails();
         return userDetails.getCurrUserRoleId();
     }
