@@ -6,6 +6,7 @@ import com.example.demo.account.entity.SysRole;
 import com.example.demo.account.entity.SysUser;
 import com.example.demo.account.service.impl.DljlServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -37,6 +38,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             ServletException {
         //获得授权后可得到用户信息
         SecurityUser userDetails = (SecurityUser)authentication.getPrincipal();
+
         //输出登录提示信息
         System.out.println("欢迎 " + userDetails.getUsername() + " 登录");
         System.out.println("IP :"+getIpAddress(request));
@@ -45,13 +47,13 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         Dljl dljl = new Dljl(userDetails.getUsername(),df.format(new Date()),getIpAddress(request));
         dljlService.save(dljl);
         Integer isTop = userDetails.getIsTop();
-        if (isTop==0){
+        if (isTop==0){//单角色
             response.sendRedirect(request.getContextPath()+"/index");
-        } else if (isTop == 1) {
+        } else if (isTop == 1) {//多角色
             request.getRequestDispatcher("/toChooseRole").forward(request,response);
 //            response.sendRedirect(request.getContextPath()+"/toChooseRole");
-        } else {
-
+        } else {//无角色
+            request.getRequestDispatcher("/toChooseRole").forward(request,response);
         }
 
     }  

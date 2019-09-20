@@ -1,14 +1,12 @@
 package com.example.demo.account.web;
 
-import com.example.demo.account.entity.Dljl;
-import com.example.demo.account.entity.SysRole;
-import com.example.demo.account.entity.SysUser;
-import com.example.demo.account.entity.UserInfo;
+import com.example.demo.account.entity.*;
 import com.example.demo.account.service.impl.DljlServiceImpl;
 import com.example.demo.account.service.impl.RoleServiceImpl;
 import com.example.demo.account.service.impl.UserServiceImpl;
 import com.example.demo.common.utils.BCryptUtil;
 import com.example.demo.common.utils.Constant;
+import com.example.demo.common.utils.SpringSecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -132,7 +130,12 @@ public class UserController {
     }
 
     @GetMapping("/userInfo")
-    public String userInfo() {
+    public String userInfo(ModelMap map) {
+        SecurityUser currentUserDetails = SpringSecurityUtils.getCurrentUserDetails();
+        map.addAttribute("user", currentUserDetails);
+        SysRole role = roleService.findById(currentUserDetails.getCurrUserRoleId());
+        map.addAttribute("role", Constant.roleMap.get(role.getName()));
+        System.out.println(currentUserDetails.getEmail());
         return "user/userInfo";
     }
     @GetMapping("/changePwd")

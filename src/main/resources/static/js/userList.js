@@ -17,21 +17,21 @@ layui.use(['form','layer','table','laytpl'],function(){
         id : "userListTable",
         cols : [[
             {type: "checkbox", fixed:"left", width:50},
-            {field: 'username', title: '用户名', Width:50, align:"center"},
-            {field: 'sex', title: '性别', Width:25, align:'center'},
-            {field: 'email', title: '邮箱', Width:80, align:'center',templet:function(d){
+            {field: 'username', title: '用户名', minWidth:80, align:"center"},
+            {field: 'sex', title: '性别', width:60, align:'center'},
+            {field: 'email', title: '邮箱', minWidth:80, align:'center',templet:function(d){
                     return '<a class="layui-blue" href="mailto:'+d.email+'">'+d.email+'</a>';
                 }},
             /*{field: 'email', title: '邮箱', Width:80, align:"center"},*/
-            {field: 'mobile', title: '手机号码', Width:80, align:"center"},
+            {field: 'mobile', title: '手机号码', minWidth:80, align:"center"},
             {field: 'roles', title: '角色', minWidth:50, align:'center'},
-            {field: 'status', title: '状态', width:70, align:'center',templet:function(d){
+            {field: 'status', title: '状态', width:60, align:'center',templet:function(d){
                     return d.status == 0 ? "禁用" : "启用";
                 }},
             {field: 'lastTime', title: '最后登录时间', align:'center',minWidth:100,templet:function (d) {
                     return (d.lastTime==null) ?"无":d.lastTime;
                 }},
-            {title: '操作', minWidth:175,fixed:"right",align:"center",templet:"#userListBar"}
+            {title: '操作', minWidth:190,fixed:"right",align:"center",templet:"#userListBar"}
         ]]
     });
 
@@ -139,6 +139,7 @@ layui.use(['form','layer','table','laytpl'],function(){
         if(layEvent === 'edit'){ //编辑
             addUser(data);
         }else if(layEvent === 'usable'){ //启用禁用
+            alert(data);
             if (data.status==1) {
                 usableText = "是否确定禁用此用户？",
                     btnText = "已禁用";

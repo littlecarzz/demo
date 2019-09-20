@@ -1,6 +1,7 @@
 package com.example.demo.common.config;
 
 import com.example.demo.common.exception.CaptchaException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
@@ -23,9 +24,10 @@ public class LoginAuthenticationFailureHandler extends SimpleUrlAuthenticationFa
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-
         if (exception instanceof CaptchaException) {
             getRedirectStrategy().sendRedirect(request, response, CODE_ERROR_URL);
+        } else if (exception instanceof DisabledException) {
+            getRedirectStrategy().sendRedirect(request, response, DISABLED_URL);
         } else {
             getRedirectStrategy().sendRedirect(request, response, PASS_ERROR_URL);
         }

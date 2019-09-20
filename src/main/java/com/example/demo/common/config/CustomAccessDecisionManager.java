@@ -9,6 +9,8 @@ import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -61,10 +63,6 @@ public class CustomAccessDecisionManager implements AccessDecisionManager{
 //            String needRole = "ROLE_"+((SecurityConfig)ca).getAttribute();
             //ga 为用户所被赋予的权限。 needRole 为访问相应的资源应该具有的权限。
             String needRole = ((SecurityConfig)ca).getAttribute();
-//            Long currentUserRoleId = SpringSecurityUtils.getCurrentUserRoleId();
-//            String currRole = Constant.roleIdMap.get(currentUserRoleId);
-            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-            System.out.println("CustomAccessDecisionManager :"+authorities.toString());
             for( GrantedAuthority ga: authentication.getAuthorities()){
                 if(needRole.trim().equals(ga.getAuthority().trim())){
                     return;

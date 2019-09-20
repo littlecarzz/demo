@@ -45,7 +45,6 @@ public class ResourceRoleServiceImpl  implements ResourceRoleService {
             Optional<SysRole> role = roleRepository.findById(resourceRole.getRoleId());
             roleList.add(role.get());
         }
-        System.out.println(roleList.toString());
         return roleList;
     }
 

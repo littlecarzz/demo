@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
@@ -83,6 +84,7 @@ public class UserServiceImpl implements UserService {
         Optional<SysRole> role = roleRepository.findById(roleId);
         Collection<GrantedAuthority> authorities = new LinkedHashSet<>();
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.get().getName());
+        authorities.add(authority);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(currentUserDetails.getUsername()+"@@@"+roleId.toString(), currentUserDetails.getUserPwd(), authorities);
         try{
             token.setDetails(new WebAuthenticationDetails(request));

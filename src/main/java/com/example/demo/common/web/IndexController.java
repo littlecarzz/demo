@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -100,10 +101,9 @@ public class IndexController {
 
     @RequestMapping("/getRes")
     @ResponseBody
-    public Map<String, List<ResourceInfo>> getRes() {
+    public Map<String, List<ResourceInfo>> getRes(HttpServletRequest request) {
         Map<String, List<ResourceInfo>> map = new HashMap<>();
         Long userRoleId = SpringSecurityUtils.getCurrentUserRoleId();
-        System.out.println("/getRes--"+userRoleId);
         List<SysResource> resourceList=resourceService.findResourceByRoleId(userRoleId);
         List<ResourceInfo> resourceInfos = resourceService.combineJson(resourceList);
         map.put("contentManagement",resourceInfos);

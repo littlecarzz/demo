@@ -50,14 +50,14 @@ public class ResourceServiceImpl implements ResourceService {
                 if (subResources.size()>0){
                     for (SysResource resource1 :
                             subResources) {
-//                        if (resourceList.contains(resource1)) {
+                        if (resourceList.contains(resource1)) {
                         ResourceInfo resourceInfo1 = new ResourceInfo();
                         resourceInfo1.setTitle(resource1.getTitle());
                         resourceInfo1.setHref(resource1.getUrl());
                         resourceInfo1.setIcon(resource1.getIcon());
                         resourceInfo1.setSpread(false);
                         chlidren.add(resourceInfo1);
-//                        }
+                        }
                     }
                 }
                 resourceInfo.setChildren(chlidren);

@@ -28,6 +28,10 @@ public class SecurityUser extends SysUser implements UserDetails {
      * 用户明密码
      */
     private String userPwd;
+    /**
+     * 用户权限角色
+     */
+    private Collection<GrantedAuthority> authorities;
 
     public SecurityUser(SysUser sysUser) {
         if (null != sysUser) {
@@ -38,13 +42,13 @@ public class SecurityUser extends SysUser implements UserDetails {
             this.setMobile(sysUser.getMobile());
             this.setSex(sysUser.getSex());
             this.setStatus(sysUser.getStatus());
+            this.setEmail(sysUser.getEmail());
         }
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        System.out.println("SecurityUser_getAuthorities");
-        Collection<GrantedAuthority> authorities = new LinkedHashSet<>();
+/*        Collection<GrantedAuthority> authorities = new LinkedHashSet<>();
         Set<SysRole> sysRoles = this.getSysRoles();
         if (null != sysRoles) {
             for (SysRole role :
@@ -52,8 +56,12 @@ public class SecurityUser extends SysUser implements UserDetails {
                 SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.getName());
                 authorities.add(authority);
             }
-        }
+        }*/
         return authorities;
+    }
+
+    public void setAuthorities(Collection<GrantedAuthority> authorities) {
+        this.authorities = authorities;
     }
 
     public Long getCurrUserRoleId() {
