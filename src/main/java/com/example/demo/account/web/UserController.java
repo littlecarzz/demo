@@ -10,10 +10,7 @@ import com.example.demo.common.utils.SpringSecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
@@ -134,9 +131,24 @@ public class UserController {
         SecurityUser currentUserDetails = SpringSecurityUtils.getCurrentUserDetails();
         map.addAttribute("user", currentUserDetails);
         SysRole role = roleService.findById(currentUserDetails.getCurrUserRoleId());
-        map.addAttribute("role", Constant.roleMap.get(role.getName()));
-        System.out.println(currentUserDetails.getEmail());
+        map.addAttribute("role", role);
         return "user/userInfo";
+    }
+
+    @PostMapping("/userModify")
+    @ResponseBody
+    public String userModify(SysUser user) {
+        try {
+            SysUser sysUser = userService.findByUsername(user.getUsername());
+            sysUser.setEmail(user.getEmail());
+            sysUser.setMobile(user.getMobile());
+            sysUser.setSex(user.getSex());
+            userService.save(sysUser);
+            return "success";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error";
+        }
     }
     @GetMapping("/changePwd")
     public String changePwd() {

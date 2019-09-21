@@ -48,9 +48,9 @@ public class CustomerDetailService implements UserDetailsService {
         if (null == user) {
             throw new UsernameNotFoundException("UserName: " + username + " not found");
         }
-        if (user.getStatus().intValue() == 0) {
+/*        if (user.getStatus().intValue() == 0) {
             throw new DisabledException(user.getUsername() + " is disabled");
-        }
+        }*/
         SecurityUser securityUser = new SecurityUser(user);
         Set<SysRole> roleSet = user.getSysRoles();
         Collection<GrantedAuthority> authorities = new LinkedHashSet<>();

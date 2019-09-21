@@ -38,7 +38,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             ServletException {
         //获得授权后可得到用户信息
         SecurityUser userDetails = (SecurityUser)authentication.getPrincipal();
-
+        if (userDetails.getStatus().intValue()==0) {//用户被禁用
+            response.sendRedirect(request.getContextPath()+"/login?disabled");
+            return;
+        }
         //输出登录提示信息
         System.out.println("欢迎 " + userDetails.getUsername() + " 登录");
         System.out.println("IP :"+getIpAddress(request));

@@ -52,29 +52,43 @@ layui.use(['form','layer','upload','laydate',"address"],function(){
     //提交个人资料
     form.on("submit(changeUser)",function(data){
         var index = layer.msg('提交中，请稍候',{icon: 16,time:false,shade:0.8});
-        //将填写的用户信息存到session以便下次调取
-        var key,userInfoHtml = '';
-        userInfoHtml = {
-            'realName' : $(".realName").val(),
-            'sex' : data.field.sex,
-            'userPhone' : $(".userPhone").val(),
-            'userBirthday' : $(".userBirthday").val(),
-            'province' : data.field.province,
-            'city' : data.field.city,
-            'area' : data.field.area,
-            'userEmail' : $(".userEmail").val(),
-            'myself' : $(".myself").val()
-        };
-        for(key in data.field){
-            if(key.indexOf("like") != -1){
-                userInfoHtml[key] = "on";
+        var sex;
+        $("input[name='sex']").each(function () {
+            var ch=$(this).prop("checked");
+            if (ch==true) {
+                sex = $(this).val();
             }
-        }
+        })
+        var username=$("#username").val();
+        var mobile=$("#mobile").val();
+        var email=$("#email").val();
+        //将填写的用户信息存到session以便下次调取
+        var userInfoHtml = '';
+        userInfoHtml = {
+            'username' : username,
+            'sex' : sex,
+            'mobile' : mobile,
+            'email' : email
+        };
         window.sessionStorage.setItem("userInfo",JSON.stringify(userInfoHtml));
-        setTimeout(function(){
+        $.post("/userModify",{
+            username: username,
+            sex: sex,
+            mobile: mobile,
+            email: email
+        },function (data) {
+            if (data =="success") {
+                layer.close(index);
+                layer.msg("提交成功！");
+            }else if (data == "error") {
+                layer.close(index);
+                layer.msg("修改失败！");
+            }
+        });
+/*        setTimeout(function(){
             layer.close(index);
             layer.msg("提交成功！");
-        },2000);
+        },2000);*/
         return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
     })
 
@@ -89,3 +103,7 @@ layui.use(['form','layer','upload','laydate',"address"],function(){
         return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
     })
 })
+
+function reset() {
+
+}
