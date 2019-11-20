@@ -11,6 +11,8 @@ import com.example.demo.account.service.impl.ResourceServiceImpl;
 import com.example.demo.account.service.impl.RoleServiceImpl;
 import com.example.demo.account.service.impl.UserServiceImpl;
 import com.example.demo.common.utils.SpringSecurityUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -38,6 +40,7 @@ import java.util.*;
  * @date 2019/9/4 14:50
  */
 @Controller
+@Api(value = "/indexOfmain",description = "Operations about index")
 public class IndexController {
 
     @Autowired
@@ -50,6 +53,7 @@ public class IndexController {
         return "index";
     }
     @RequestMapping("/toChooseRole")
+    @ApiOperation(value = "/toChooseRole")
     public String toChooseRole(ModelMap map,HttpServletRequest request) {
         String password = request.getParameter("password");
         SecurityUser currentUserDetails = SpringSecurityUtils.getCurrentUserDetails();

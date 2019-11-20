@@ -50,7 +50,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 密码加密
-     * @return
+     * @return BCryptPasswordEncoder
      */
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -59,7 +59,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 登录成功后的处理
-     * @return
+     * @return LoginSuccessHandler
      */
     @Bean
     public LoginSuccessHandler loginSuccessHandler() {
@@ -68,7 +68,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 自定义登录验证
-     * @return
+     * @return AuthenticationProvider
      */
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -80,7 +80,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 登录异常的处理
-     * @return
+     * @return AuthenticationFailureHandler
      */
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
@@ -97,7 +97,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 自定义RememberMeServices
-     * @return
+     * @return PersistentTokenBasedRememberMeServices
      * @throws SQLException
      */
     @Bean
@@ -108,7 +108,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * 自定义登录过滤器 extends UsernamePasswordAuthenticationFilter
+     * 自定义登录过滤器
+     * {@link UsernamePasswordAuthenticationFilter}
      * @return LoginAuthenticationFilter
      * @throws Exception
      */
@@ -150,7 +151,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                     .antMatchers("/login","/code","/loginValidateCode","/test").permitAll()
-                    .anyRequest().authenticated()
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
                     .loginPage("/login")
@@ -191,7 +192,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**","/js/**","/json/**","/layui/**","/images/**");
+        web.ignoring().antMatchers("/css/**","/js/**","/json/**","/layui/**","/images/**",
+                //swagger api json
+                "/v2/api-docs",
+                //用来获取支持的动作
+                "/swagger-resources/configuration/ui",
+                //用来获取api-docs的URI
+                "/swagger-resources",
+                //安全选项
+                "/swagger-resources/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
     }
 
     /**

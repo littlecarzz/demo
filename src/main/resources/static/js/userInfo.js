@@ -3,7 +3,7 @@ layui.config({
     base : "../../js/"
 }).extend({
     "address" : "address"
-})
+});
 layui.use(['form','layer','upload','laydate',"address"],function(){
     form = layui.form;
     $ = layui.jquery;
@@ -31,7 +31,7 @@ layui.use(['form','layer','upload','laydate',"address"],function(){
                 return "出生日期格式不正确！";
             }
         }
-    })
+    });
     //选择出生日期
     laydate.render({
         elem: '.userBirthday',
@@ -58,7 +58,7 @@ layui.use(['form','layer','upload','laydate',"address"],function(){
             if (ch==true) {
                 sex = $(this).val();
             }
-        })
+        });
         var username=$("#username").val();
         var mobile=$("#mobile").val();
         var email=$("#email").val();
@@ -70,7 +70,7 @@ layui.use(['form','layer','upload','laydate',"address"],function(){
             'mobile' : mobile,
             'email' : email
         };
-        window.sessionStorage.setItem("userInfo",JSON.stringify(userInfoHtml));
+        // window.sessionStorage.setItem("userInfo",JSON.stringify(userInfoHtml));
         $.post("/userModify",{
             username: username,
             sex: sex,
@@ -90,20 +90,5 @@ layui.use(['form','layer','upload','laydate',"address"],function(){
             layer.msg("提交成功！");
         },2000);*/
         return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-    })
-
-    //修改密码
-    form.on("submit(changePwd)",function(data){
-        var index = layer.msg('提交中，请稍候',{icon: 16,time:false,shade:0.8});
-        setTimeout(function(){
-            layer.close(index);
-            layer.msg("密码修改成功！");
-            $(".pwd").val('');
-        },2000);
-        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-    })
-})
-
-function reset() {
-
-}
+    });
+});

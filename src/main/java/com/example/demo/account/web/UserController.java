@@ -7,6 +7,8 @@ import com.example.demo.account.service.impl.UserServiceImpl;
 import com.example.demo.common.utils.BCryptUtil;
 import com.example.demo.common.utils.Constant;
 import com.example.demo.common.utils.SpringSecurityUtils;
+import io.swagger.annotations.Api;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,6 +24,7 @@ import java.util.*;
  * @date 2019/9/12 10:11
  */
 @Controller
+@Api(value = "/user")
 public class UserController {
     @Autowired
     private UserServiceImpl userService;
@@ -31,6 +34,7 @@ public class UserController {
     @Autowired
     private RoleServiceImpl roleService;
 
+
     @RequestMapping("/toUserList")
     public String toUserList() {
         return "user/userList";
@@ -39,12 +43,11 @@ public class UserController {
     @RequestMapping("/userList")
     @ResponseBody
     public Map<String,Object> userList( String username) {
-        System.out.println(username);
         Map<String, Object> map = new HashMap<>();
         String roles = "";
         List<UserInfo> userInfoList = new LinkedList <>();
         List<SysUser> userList = new LinkedList<>();
-        if (username != null && username!="" && username!="undefined") {
+        if (StringUtils.isNotEmpty(username)) {
             username = "%" + username + "%";
             userList = userService.findByUsernameLike(username);
         }else{
@@ -89,7 +92,7 @@ public class UserController {
     @RequestMapping("/userAdd")
     @ResponseBody
     public String userAdd(SysUser user, @RequestParam("role") String role) {
-        user.setPassword(BCryptUtil.encode("123456"));
+        user.setPassword(BCryptUtil.encode(Constant.initialPassword));
         Set<SysRole> sysRoles = new HashSet<SysRole>();
         String[] roles = role.split(",");
         try{
@@ -103,7 +106,6 @@ public class UserController {
             return "success";
         }catch (Exception e){
             e.printStackTrace();
-            System.out.println(e.toString());
             return "error";
         }
     }
@@ -137,21 +139,69 @@ public class UserController {
 
     @PostMapping("/userModify")
     @ResponseBody
-    public String userModify(SysUser user) {
+        public String userModify(SysUser user) {
         try {
             SysUser sysUser = userService.findByUsername(user.getUsername());
             sysUser.setEmail(user.getEmail());
             sysUser.setMobile(user.getMobile());
             sysUser.setSex(user.getSex());
             userService.save(sysUser);
+            SecurityUser currentUserDetails = SpringSecurityUtils.getCurrentUserDetails();
+            currentUserDetails.setSex(sysUser.getSex());
+            currentUserDetails.setEmail(sysUser.getEmail());
+            currentUserDetails.setMobile(sysUser.getMobile());
             return "success";
         } catch (Exception e) {
             e.printStackTrace();
             return "error";
         }
     }
-    @GetMapping("/changePwd")
-    public String changePwd() {
+    @GetMapping("/toChangePwd")
+    public String toChangePwd(ModelMap map) {
+        SecurityUser currentUserDetails = SpringSecurityUtils.getCurrentUserDetails();
+        map.addAttribute("user", currentUserDetails);
         return "user/changePwd";
+    }
+    @PostMapping("/checkOldPwd")
+    @ResponseBody
+    public String checkOldPwd(@RequestParam("oldPassword") String oldPassword){
+        SecurityUser currentUserDetails = SpringSecurityUtils.getCurrentUserDetails();
+        boolean match = BCryptUtil.match(oldPassword, currentUserDetails.getPassword());
+        return String.valueOf(match);
+    }
+
+    @PostMapping("/changePwd")
+    @ResponseBody
+    public String changePwd(@RequestParam("newPwd") String newPwd,@RequestParam("username") String username) {
+        try {
+            SysUser user = userService.findByUsername(username);
+            String pwd = BCryptUtil.encode(newPwd);
+            user.setPassword(pwd);
+            userService.save(user);
+            SecurityUser currentUserDetails = SpringSecurityUtils.getCurrentUserDetails();
+            currentUserDetails.setPassword(pwd);
+            return "success";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error";
+        }
+    }
+
+    @PostMapping("/changeStatus")
+    @ResponseBody
+    public String changeStatus(String username,Integer status) {
+        try{
+            SysUser user = userService.findByUsername(username);
+            if (user.getStatus().intValue()==status) {
+                user.setStatus(user.getStatus().intValue()==1?0:1);
+            }
+            userService.save(user);
+            SecurityUser currentUserDetails = SpringSecurityUtils.getCurrentUserDetails();
+            currentUserDetails.setStatus(user.getStatus());
+            return "success";
+        }catch(Exception e){
+            e.printStackTrace();
+            return "error";
+        }
     }
 }

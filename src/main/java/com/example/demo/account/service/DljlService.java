@@ -3,6 +3,7 @@ package com.example.demo.account.service;
 import com.example.demo.account.entity.Dljl;
 import com.example.demo.account.entity.SysResourceRole;
 import com.example.demo.account.entity.SysRole;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

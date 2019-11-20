@@ -99,7 +99,7 @@ layui.use(['form','layer','table','laytpl'],function(){
     }
     $(".addNews_btn").click(function(){
         addUser();
-    })
+    });
 
     //批量删除
     $(".delAll_btn").click(function(){
@@ -129,7 +129,7 @@ layui.use(['form','layer','table','laytpl'],function(){
         }else{
             layer.msg("请选择需要删除的用户");
         }
-    })
+    });
 
     //列表操作
     table.on('tool(userList)', function(obj){
@@ -139,20 +139,13 @@ layui.use(['form','layer','table','laytpl'],function(){
         if(layEvent === 'edit'){ //编辑
             addUser(data);
         }else if(layEvent === 'usable'){ //启用禁用
-            alert(data);
+            alert(data.status);
             if (data.status==1) {
                 usableText = "是否确定禁用此用户？",
                     btnText = "已禁用";
             }else{
                 usableText = "是否确定启用此用户？",
                     btnText = "已启用";
-            }
-            var _this = $(this),
-                usableText = "是否确定禁用此用户？",
-                btnText = "已禁用";
-            if(_this.text()=="已禁用"){
-                usableText = "是否确定启用此用户？",
-                btnText = "已启用";
             }
             layer.confirm(usableText,{
                 icon: 3,
@@ -161,8 +154,20 @@ layui.use(['form','layer','table','laytpl'],function(){
                     layer.close(index);
                 }
             },function(index){
-                _this.text(btnText);
-                layer.close(index);
+                $.post("/changeStatus",{
+                    username:data.username,
+                    status:data.status
+                },function(data){
+                    if (data=="success") {
+                        layer.close(index);
+                        layer.msg(btnText);
+                        tableIns.reload();
+                    }else{
+                        layer.close(index);
+                        layer.msg("状态修改失败！");
+                        tableIns.reload();
+                    }
+                });
             },function(index){
                 layer.close(index);
             });
@@ -182,5 +187,18 @@ layui.use(['form','layer','table','laytpl'],function(){
             });
         }
     });
-
+    document.onkeydown = function(e){
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            table.reload("userListTable",{
+                url:"/userList",
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: {
+                    username: $(".searchVal").val()  //搜索的关键字
+                }
+            })
+        }
+    }
 })

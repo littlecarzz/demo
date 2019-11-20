@@ -25,4 +25,6 @@ public class Constant {
         roleIdMap.put(2L, "USER");
     }
 
+    public static final String initialPassword = "123456";
+
 }

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh"
+	  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 	<meta charset="utf-8">
 	<title>修改密码--layui后台管理模板 2.0</title>
@@ -9,17 +11,17 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no">
-	<link rel="stylesheet" href="../../layui/css/layui.css" media="all" />
-	<link rel="stylesheet" href="../../css/public.css" media="all" />
+	<link rel="stylesheet" th:href="@{/layui/css/layui.css}" href="../../static/layui/css/layui.css" media="all" />
+	<link rel="stylesheet" th:href="@{/css/public.css}" href="../../static/css/public.css" media="all" />
 </head>
 <body class="childrenBody">
 <form class="layui-form layui-row changePwd">
 	<div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
-		<div class="layui-input-block layui-red pwdTips">旧密码请输入“123456”，新密码必须两次输入一致才能提交</div>
+		<div class="layui-input-block layui-red pwdTips">新密码必须两次输入一致才能提交</div>
 		<div class="layui-form-item">
 			<label class="layui-form-label">用户名</label>
 			<div class="layui-input-block">
-				<input type="text" value="驊驊龔頾" disabled class="layui-input layui-disabled">
+				<input type="text" id="username" th:value="${user.username}" value="驊驊龔頾" disabled class="layui-input layui-disabled">
 			</div>
 		</div>
 		<div class="layui-form-item">
@@ -48,7 +50,7 @@
 		</div>
 	</div>
 </form>
-<script type="text/javascript" src="../../layui/layui.js"></script>
-<script type="text/javascript" src="user.js"></script>
+<script type="text/javascript" th:src="@{layui/layui.js}" src="../../static/layui/layui.js"></script>
+<script type="text/javascript" th:src="@{/js/changePwd.js}" src="../../static/js/changePwd.js"></script>
 </body>
 </html>

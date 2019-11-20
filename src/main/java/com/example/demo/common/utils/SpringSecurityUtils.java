@@ -50,4 +50,5 @@ public class SpringSecurityUtils {
         SecurityUser userDetails = getCurrentUserDetails();
         return userDetails.getCurrUserRoleId();
     }
+
 }
