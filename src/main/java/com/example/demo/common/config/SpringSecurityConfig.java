@@ -1,10 +1,13 @@
 package com.example.demo.common.config;
 
+import com.example.demo.account.entity.SysUser;
 import com.example.demo.common.exception.CaptchaException;
 import com.example.demo.common.filter.LoginAuthenticationFilter;
 import com.example.demo.common.filter.MySecurityFilter;
 import com.example.demo.common.service.CustomerDetailService;
+import org.apache.catalina.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
@@ -14,6 +17,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -22,6 +28,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.ServletRequestHandledEvent;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -47,6 +55,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private DataSource dataSource;
     @Autowired
     private MySecurityFilter mySecurityFilter;
+
+    /**
+     * 注册bean sessionRegistry
+     */
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
 
     /**
      * 密码加密
@@ -180,6 +196,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //                  X-Frame-Options HTTP 响应头
                     .frameOptions().sameOrigin()
                 .and()
+                .sessionManagement()
+                    //session无效的跳转
+                    .invalidSessionUrl("/login")
+                    .maximumSessions(1)
+                    //session过期的跳转
+                    .expiredUrl("/login")
+                    .sessionRegistry(sessionRegistry())
+                .and()
+
+                .and()
                 .csrf()
                     .disable()
                 ;
@@ -218,4 +244,5 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .passwordEncoder(new BCryptPasswordEncoder()).withUser("admin").password(new BCryptPasswordEncoder().encode("123456")).roles("admin");
     }*/
+
 }

@@ -4,6 +4,7 @@ import com.example.demo.account.entity.SysResource;
 import com.example.demo.account.entity.SysRole;
 import com.example.demo.account.service.impl.ResourceRoleServiceImpl;
 import com.example.demo.account.service.impl.ResourceServiceImpl;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.security.access.ConfigAttribute;
@@ -54,7 +55,6 @@ public class CustomInvocationSecurityMetadataSourceService implements FilterInvo
             }
             resourceMap.put(url, atts);
         }
-        System.out.println(resourceMap.toString());
     }
 
     /**

@@ -2,6 +2,7 @@ package com.example.demo.common.utils;
 
 import com.example.demo.account.entity.SecurityUser;
 import com.example.demo.account.entity.SysUser;
+import org.apache.catalina.security.SecurityUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
